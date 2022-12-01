@@ -13,9 +13,6 @@ from starkware.starknet.common.syscalls import (
 )
 
 
-
-
-
 struct Game{
 Defender:felt,
 Attacker:felt,
