@@ -39,6 +39,9 @@ func games(game_idx : felt) -> (game_struct : Game){
 }
 
 
+// This function can be called by anyone and A new came will be created.
+// Player1 will be treated as defender, and they will have to choose 5 positions and place the battle ship.
+// Player 2 will be treated as Attacker , and the have to guess any 5 positions where the battle ship is placed.
 
 @external
 func set_up_game{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(player1 : felt, player2 : felt)->(n:felt){
@@ -52,7 +55,9 @@ func set_up_game{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     return (n=newGc);
 }
 
-
+// Defender will have to call this function and pass the merkel root. where leafs contains all details about each positions in grid.
+// The Attacker will have to attack the grid within 300 sec once defender set's the battleship
+@external
 func choose_square{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(game_id : felt, hash : felt){
     let (game) = games.read(game_id);
         let (caller) = get_caller_address();
@@ -65,6 +70,9 @@ games.write(game_id, game);
 return();
 }
 
+
+// This function needs to called by attacker and he will have to pass leaf detail of the chooses leaf ie. row,col,1
+@external
 func attack{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(game_id : felt,array_len : felt, array : felt*,proof:felt){
    let (game) = games.read(game_id);
         let (caller) = get_caller_address();
